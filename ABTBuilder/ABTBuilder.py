@@ -1,7 +1,7 @@
 ######################################
 #   Spark Payroll Analysis           #
-#   Author: Jinzhong Zhang, Xu Lian  #
-#   Mar, 2016                        #
+#   Author: Jinzhong Zhang           #
+#   Aug, 2016                        #
 ######################################
 
 # Plot colors
