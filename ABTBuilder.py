@@ -93,56 +93,91 @@ def load_occurrence_matrix(filename, item_dict={}):
         sys.stdout.write("\n")
     return item_dict
 
-# def build(userID, history):
-#     res = []
-#     for week in history:
-#         res = week.lookup(userID)
-#     sys.stdout.write("{0},{1}\n".format(userID,res))
-#     return res
+# def sort_by_weight(prod_occurrence):
+#     ordered_occurrence = {}
+#     for userID, entry in prod_occurrence.items():
+#         weights = list(entry.values())
+#         # sum_weights = sum(weights)
+#         # weights = [weight*100/sum_weights for weight in weights ]
+#         occurrences = list(zip(list(entry.keys()),weights))
+#         occurrences.sort(key=lambda x:x[1], reverse=True)
+#         ordered_occurrence[userID] = occurrences
+#     return ordered_occurrence
 
-def sort_by_weight(prod_occurrence):
-    ordered_occurrence = {}
-    for userID, entry in prod_occurrence.items():
-        weights = list(entry.values())
-        sum_weights = sum(weights)
-        weights = [weight*100/sum_weights for weight in weights ]
-        occurrences = list(zip(list(entry.keys()),weights))
-        occurrences.sort(key=lambda x:x[1], reverse=True)
-        ordered_occurrence[userID] = occurrences
-    return ordered_occurrence
+def load_popularity(filename, item_pop={}):
+    with open(filename, 'r') as f:
+        for line in f:
+            item, pop = line[1:-2].split(', ')
+            item = int(item)
+            if item not in item_pop:
+                item_pop[item] = int(pop)
+            else:
+                item_pop[item] += int(pop)
+    sys.stdout.write("Read popularity from {0}, done.\n".format(filename))
+    return item_pop
 
-N_TRAINING_WEEKS = 1
+N_TRAINING_WEEKS = 2
 weeks_prod = [{}]*N_TRAINING_WEEKS
 weeks_depot = [{}]*N_TRAINING_WEEKS
+# weeks_prod[0], weeks_depot[0] = load_customer("test")
+# weeks_prod[1], weeks_depot[1] = load_customer("test")
 weeks_prod[0], weeks_depot[0] = load_customer("MLprojectOutput/week3objectoutput/part-00000")
-prod_occurrence = load_occurrence_matrix("MLprojectOutput/week3Productmatrix/part-00000")
+weeks_prod[1], weeks_depot[1] = load_customer("MLprojectOutput/week4objectoutput/part-00000")
+weeks_prod[1], weeks_depot[1] = load_customer("MLprojectOutput/week5objectoutput/part-00000")
+
+prod_occurrence = load_occurrence_matrix("MLprojectOutput/week3ProductMatrix/part-00000")
 prod_occurrence = load_occurrence_matrix("MLprojectOutput/week4ProductMatrix/part-00000", prod_occurrence)
 prod_occurrence = load_occurrence_matrix("MLprojectOutput/week5ProductMatrix/part-00000", prod_occurrence)
-prod_occurrence = sort_by_weight(prod_occurrence)
+# prod_occurrence = sort_by_weight(prod_occurrence)
+
+product_popularity = load_popularity("MLprojectOutput/week3ProductPopularity/part-00000")
+product_popularity = load_popularity("MLprojectOutput/week4ProductPopularity/part-00000", product_popularity)
+product_popularity = load_popularity("MLprojectOutput/week5ProductPopularity/part-00000", product_popularity)
+
+depot_popularity = load_popularity("MLprojectOutput/week3DepotPopularity/part-00000")
+depot_popularity = load_popularity("MLprojectOutput/week4DepotPopularity/part-00000", depot_popularity)
+depot_popularity = load_popularity("MLprojectOutput/week5DepotPopularity/part-00000", depot_popularity)
 
 MAX_RELATIVE_PRODUCTS = 3
 def createSample(line):
     token = line.split(",")
-    userID = token[4]
-    product = token[5]
-    depot = token[1]
+    userID = int(token[4])
+    product = int(token[5])
+    depot = int(token[1])
     demand = int(token[-1][:-1])
     n_prod = [0]*N_TRAINING_WEEKS
-    n_rel_prod = [[0]*MAX_RELATIVE_PRODUCTS]*N_TRAINING_WEEKS
+    n_rel_prod = [[]]*N_TRAINING_WEEKS
     for i, week_prod in enumerate(weeks_prod):
         if userID in week_prod:
-            if product in week_prod[userID]:
-                n_prod[i] = week_prod[userID][product]
+            shopping_list = week_prod[userID]
+            if product in shopping_list:
+                n_prod[i] = shopping_list[product]
             if product in prod_occurrence:
                 relative_prods = prod_occurrence[product]
-                ifound = 0
-                for j, rel_prod in enumerate(relative_prods):
-                    if rel_prod[0] in week_prod[userID]:
-                        n_rel_prod[i][ifound] = week_prod[userID][rel_prod]*rel_prod[1]
-                        ifound += 1
-                        if ifound==3:
-                            break
-    return n_prod+n_rel_prod[0]+[demand]
+                for prod, number in shopping_list.items():
+                    if prod in relative_prods:
+                        n_rel_prod[i].append(relative_prods[prod]*number)
+            n_rel_prod[i].sort(reverse=True)
+            n = len(n_rel_prod[i])
+            if n > MAX_RELATIVE_PRODUCTS:
+                n_rel_prod[i]=n_rel_prod[i][:MAX_RELATIVE_PRODUCTS]
+            else:
+                n_rel_prod[i].extend([0]*(MAX_RELATIVE_PRODUCTS-n))
+    row = []
+    for i, entry in enumerate(n_prod):
+        row.append(entry)
+        row.extend(n_rel_prod[i])
+    #calculate the popularities
+    if product in product_popularity:
+        prod_pop = product_popularity[product]
+    else:
+        prod_pop = 0
+    if depot in depot_popularity:
+        depot_pop = depot_popularity[depot]
+    else:
+        depot_pop = 0
+    row.extend([prod_pop,depot_pop,demand])
+    return row
 
 if __name__ == "__main__":
     if __debug__:
