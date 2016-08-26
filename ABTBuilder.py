@@ -13,10 +13,11 @@
 # y: yellow
 # k: black
 # w: white
-import sys
+import sys, os
 from pyspark import SparkContext, SparkConf
 from ast import literal_eval
 import numpy as np
+TRAIN_WEEKS = [3,4,5,6]
 
 def parse(x):
     res = x[1:-1].split(',CompactBuffer')
@@ -116,57 +117,84 @@ def load_popularity(filename, item_pop={}):
     sys.stdout.write("Read popularity from {0}, done.\n".format(filename))
     return item_pop
 
-N_TRAINING_WEEKS = 2
-weeks_prod = [{}]*N_TRAINING_WEEKS
-weeks_depot = [{}]*N_TRAINING_WEEKS
-# weeks_prod[0], weeks_depot[0] = load_customer("test")
-# weeks_prod[1], weeks_depot[1] = load_customer("test")
-weeks_prod[0], weeks_depot[0] = load_customer("MLprojectOutput/week3objectoutput/part-00000")
-weeks_prod[1], weeks_depot[1] = load_customer("MLprojectOutput/week4objectoutput/part-00000")
-weeks_prod[1], weeks_depot[1] = load_customer("MLprojectOutput/week5objectoutput/part-00000")
-
-prod_occurrence = load_occurrence_matrix("MLprojectOutput/week3ProductMatrix/part-00000")
-prod_occurrence = load_occurrence_matrix("MLprojectOutput/week4ProductMatrix/part-00000", prod_occurrence)
-prod_occurrence = load_occurrence_matrix("MLprojectOutput/week5ProductMatrix/part-00000", prod_occurrence)
+N_HISTORY_WEEKS = len(TRAIN_WEEKS)-1
+weeks_prod = [{}]*N_HISTORY_WEEKS
+weeks_depot = [{}]*N_HISTORY_WEEKS
+prod_occurrence = {}
+depot_occurrence = {}
+product_popularity = {}
+depot_popularity = {}
+for i, week in enumerate(TRAIN_WEEKS[:-1]):
+    # weeks_prod[i], weeks_depot[i] = load_customer("test")
+    weeks_prod[i], weeks_depot[i] = load_customer("MLprojectOutput/week{0}objectoutput/part-00000".format(week))
+    prod_occurrence = load_occurrence_matrix("MLprojectOutput/week{0}ProductMatrix/part-00000".format(week), prod_occurrence)
+    depot_occurrence = load_occurrence_matrix("MLprojectOutput/week{0}DepotMatrix/part-00000".format(week), depot_occurrence)
+    product_popularity = load_popularity("MLprojectOutput/week{0}ProductPopularity/part-00000".format(week), product_popularity)
+    depot_popularity = load_popularity("MLprojectOutput/week{0}DepotPopularity/part-00000".format(week), depot_popularity)
 # prod_occurrence = sort_by_weight(prod_occurrence)
 
-product_popularity = load_popularity("MLprojectOutput/week3ProductPopularity/part-00000")
-product_popularity = load_popularity("MLprojectOutput/week4ProductPopularity/part-00000", product_popularity)
-product_popularity = load_popularity("MLprojectOutput/week5ProductPopularity/part-00000", product_popularity)
-
-depot_popularity = load_popularity("MLprojectOutput/week3DepotPopularity/part-00000")
-depot_popularity = load_popularity("MLprojectOutput/week4DepotPopularity/part-00000", depot_popularity)
-depot_popularity = load_popularity("MLprojectOutput/week5DepotPopularity/part-00000", depot_popularity)
-
 MAX_RELATIVE_PRODUCTS = 3
+MAX_RELATIVE_DEPOTS = 1
 def createSample(line):
     token = line.split(",")
     userID = int(token[4])
     product = int(token[5])
     depot = int(token[1])
-    demand = int(token[-1][:-1])
-    n_prod = [0]*N_TRAINING_WEEKS
-    n_rel_prod = [[]]*N_TRAINING_WEEKS
-    for i, week_prod in enumerate(weeks_prod):
+    try:
+        demand = int(token[-1])
+    except ValueError:
+        sys.stdout.write("-{0}-\n".format(token[-1]))
+        try:
+            demand = int(token[-1][:-1])
+        except ValueError:
+            sys.stdout.write("..........................")
+            demand = 0
+    row = []
+    for i in range(N_HISTORY_WEEKS):
+        n_prod = 0
+        n_rel_prod = []
+        n_depot = 0
+        n_rel_depot = []
+        # product and relative products
+        week_prod = weeks_prod[i]
         if userID in week_prod:
             shopping_list = week_prod[userID]
             if product in shopping_list:
-                n_prod[i] = shopping_list[product]
+                n_prod = shopping_list[product]
             if product in prod_occurrence:
                 relative_prods = prod_occurrence[product]
                 for prod, number in shopping_list.items():
                     if prod in relative_prods:
-                        n_rel_prod[i].append(relative_prods[prod]*number)
-            n_rel_prod[i].sort(reverse=True)
-            n = len(n_rel_prod[i])
-            if n > MAX_RELATIVE_PRODUCTS:
-                n_rel_prod[i]=n_rel_prod[i][:MAX_RELATIVE_PRODUCTS]
-            else:
-                n_rel_prod[i].extend([0]*(MAX_RELATIVE_PRODUCTS-n))
-    row = []
-    for i, entry in enumerate(n_prod):
-        row.append(entry)
-        row.extend(n_rel_prod[i])
+                        n_rel_prod.append(relative_prods[prod]*number)
+            n_rel_prod.sort(reverse=True)
+        # depot and relative depots
+        week_depot = weeks_depot[i]
+        if userID in week_depot:
+            depot_list = week_depot[userID]
+            if depot in depot_list:
+                n_depot = depot_list[depot]
+            if depot in depot_occurrence:
+                relative_depots = depot_occurrence[depot]
+                for depot, number in depot_list.items():
+                    if depot in relative_depots:
+                        n_rel_depot.append(relative_depots[depot]*number)
+            n_rel_depot.sort(reverse=True)
+        # fulfill the remaining entries
+        n = len(n_rel_prod)
+        if n > MAX_RELATIVE_PRODUCTS:
+            n_rel_prod=n_rel_prod[:MAX_RELATIVE_PRODUCTS]
+        else:
+            n_rel_prod.extend([0]*(MAX_RELATIVE_PRODUCTS-n))
+        n = len(n_rel_depot)
+        if n > MAX_RELATIVE_DEPOTS:
+            n_rel_depot=n_rel_depot[:MAX_RELATIVE_DEPOTS]
+        else:
+            n_rel_depot.extend([0]*(MAX_RELATIVE_DEPOTS-n))
+        # put the data in row
+        row.append(n_prod)
+        row.extend(n_rel_prod)
+        row.append(n_depot)
+        row.extend(n_rel_depot)
     #calculate the popularities
     if product in product_popularity:
         prod_pop = product_popularity[product]
@@ -180,20 +208,18 @@ def createSample(line):
     return row
 
 if __name__ == "__main__":
-    if __debug__:
-        count=0
-        with open("train_week6.csv", 'r') as f:
-            for line in f:
-                print(createSample(line))
-                count += 1
-                if count>10:
-                    break
-    else:
-        conf = SparkConf()
-        sc = SparkContext(conf=conf)
-        logger = sc._jvm.org.apache.log4j
-        logger.LogManager.getLogger("org"). setLevel( logger.Level.WARN )
-        logger.LogManager.getLogger("akka").setLevel( logger.Level.WARN )
-        week6 = sc.textFile("train_week6.csv").map(createSample)
-    # sys.stdout.write("{0}".format(week3.first()))
-    #test.first().pprint()
+    # count=0
+    # with open("train_week{0}.csv".format(TRAIN_WEEKS[-1]), 'r') as f:
+    #     for line in f:
+    #         print(createSample(line))
+    #         count += 1
+    #         if count>1000:
+    #             break
+    os.system("rm -rf MLprojectOutput/week{0}Formated".format(TRAIN_WEEKS[-1]))
+    conf = SparkConf()
+    sc = SparkContext(conf=conf)
+    logger = sc._jvm.org.apache.log4j
+    logger.LogManager.getLogger("org"). setLevel( logger.Level.WARN )
+    logger.LogManager.getLogger("akka").setLevel( logger.Level.WARN )
+    formated_data = sc.textFile("train_week{0}.csv".format(TRAIN_WEEKS[-1])).map(createSample)
+    formated_data.coalesce(1).saveAsTextFile("MLprojectOutput/week{0}Formated".format(TRAIN_WEEKS[-1]))
