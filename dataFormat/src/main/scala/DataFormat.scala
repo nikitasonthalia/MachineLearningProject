@@ -2,7 +2,7 @@
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
-object sparkweek3 {
+object DataFormat {
   def main(args: Array[String]){
   val sc = new SparkContext(new SparkConf().setAppName("week"));
   for( a <- 3 to 10){
