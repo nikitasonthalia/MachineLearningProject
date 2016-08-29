@@ -67,11 +67,10 @@ Now you should have `train_week[3-9].csv`.
 DataFormat folder contain the program for the formating and cleaning trainning dataset. It will format data userwise. All user data can be combine togther.
 This will help us for making Co-Occurance matrix.
 To Run this program on spark follow the following steps:
-
-    1. `cd dataformat`
-    2. `sbt`.
-    3. `package`.
-
+<pre>
+    cd dataformat
+    sbt package
+</pre>
 This will generate jar in Dataformat folder. `Copy that jar path`. 
 
     4. Open terminal in Sprak folder.
