@@ -25,11 +25,11 @@ object Cooccurrence {
     val valueD = token(1) +"#"+ token(10);
     (key,valueD)}).groupByKey;
 
-    valueP.coalesce(1).saveAsObjectFile("/MLprojectOutput/week"+a+"Pobjectoutput")
-    valueD.coalesce(1).saveAsObjectFile("/MLprojectOutput/week"+a+"Dobjectoutput")
+    valueP.coalesce(1).saveAsObjectFile("MLprojectOutput/week"+a+"Pobjectoutput")
+    valueD.coalesce(1).saveAsObjectFile("MLprojectOutput/week"+a+"Dobjectoutput")
 
-    val valuefileP =  sc.objectFile[(Char, Seq[(String)])]("/MLprojectOutput/week"+a+"Pobjectoutput/part-00000");
-    val valuefileD =  sc.objectFile[(Char, Seq[(String)])]("/MLprojectOutput/week"+a+"Dobjectoutput/part-00000");
+    val valuefileP =  sc.objectFile[(Char, Seq[(String)])]("MLprojectOutput/week"+a+"Pobjectoutput/part-00000");
+    val valuefileD =  sc.objectFile[(Char, Seq[(String)])]("MLprojectOutput/week"+a+"Dobjectoutput/part-00000");
     val outputP= valuefileP.persist(StorageLevel.MEMORY_AND_DISK_SER).flatMap( {
       case (userid, values) =>
       {
@@ -52,8 +52,8 @@ object Cooccurrence {
           })
     }}).reduceByKey(_ + _);
 
-  outputP.coalesce(1).saveAsTextFile("/MLprojectOutput/week"+a+"ProductMatrix")
-  outputD.coalesce(1).saveAsTextFile("/MLprojectOutput/week"+a+"DepotMatrix")
+  outputP.coalesce(1).saveAsTextFile("MLprojectOutput/week"+a+"ProductMatrix")
+  outputD.coalesce(1).saveAsTextFile("MLprojectOutput/week"+a+"DepotMatrix")
  }
 }
   }
