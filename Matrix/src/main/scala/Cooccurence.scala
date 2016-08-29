@@ -8,19 +8,29 @@ object Cooccurrence {
     .setMaster("local[7]") 
      .set("spark.executor.memory", "4g")
      .set("spark.driver.memory","5g"));
-    val textFile = sc.textFile("/Users/vikashkamdar/Desktop/MLprojectOutput/train_week{0}.csv")
-    val counts = textFile.map(line => {
+    for( a <- 3 to 10){
+       
+    val textFile = sc.textFile("/MLprojectOutput/train_week"+a+".csv")
+    val pro = textFile.map(line => {
     val token = line.split(",");
-     val key = token(4);
-     //For depot matrix
-    //val valueD = token(1) +"#"+ token(10);
+    val key = token(4);
     // For product matrix
     val valueP = token(5) +"#"+ token(10);
     (key,valueP)}).groupByKey;
-    output.coalesce(1).saveAsObjectFile("/Users/vikashkamdar/Desktop/MLprojectOutput/week{0}Pobjectoutput")
-    
-    val valuefile =  sc.objectFile[(Char, Seq[(String)])]("/Users/vikashkamdar/Desktop/week{0}Pobjectoutput/part-00000");
-    val output= valuefile.persist(StorageLevel.MEMORY_AND_DISK_SER).flatMap( {
+
+    val dep= textFile.map(line => {
+    val token = line.split(",");
+    val key = token(4);
+     //For depot matrix
+    val valueD = token(1) +"#"+ token(10);
+    (key,valueD)}).groupByKey;
+
+    valueP.coalesce(1).saveAsObjectFile("/MLprojectOutput/week"+a+"Pobjectoutput")
+    valueD.coalesce(1).saveAsObjectFile("/MLprojectOutput/week"+a+"Dobjectoutput")
+
+    val valuefileP =  sc.objectFile[(Char, Seq[(String)])]("/MLprojectOutput/week"+a+"Pobjectoutput/part-00000");
+    val valuefileD =  sc.objectFile[(Char, Seq[(String)])]("/MLprojectOutput/week"+a+"Dobjectoutput/part-00000");
+    val outputP= valuefileP.persist(StorageLevel.MEMORY_AND_DISK_SER).flatMap( {
       case (userid, values) =>
       {
         var productIds = values.map(value=>value.split("#")(0));
@@ -31,7 +41,19 @@ object Cooccurrence {
           })
     }}).reduceByKey(_ + _);
 
-  output.coalesce(1).saveAsTextFile("/Users/vikashkamdar/Desktop/MLprojectOutput/week7ProductMatrix")
- 
+    val outputD= valuefileD.persist(StorageLevel.MEMORY_AND_DISK_SER).flatMap( {
+      case (userid, values) =>
+      {
+        var productIds = values.map(value=>value.split("#")(0));
+        var demand = values.map(value=>value.split("#")(1));
+        productIds.combinations(2).map(
+          pairs => {
+             {(pairs.mkString("#"), 1)}
+          })
+    }}).reduceByKey(_ + _);
+
+  outputP.coalesce(1).saveAsTextFile("/MLprojectOutput/week"+a+"ProductMatrix")
+  outputD.coalesce(1).saveAsTextFile("/MLprojectOutput/week"+a+"DepotMatrix")
+ }
 }
   }
