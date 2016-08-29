@@ -49,34 +49,34 @@ DataFormat folder contain the program for the formating and cleaning trainning d
 This will help us for making Co-Occurance matrix.
 To Run this program on spark follow the following steps:
 
-Step 1: `cd dataformat`
-Step 2: `sbt`.
-Step 3: `package`.
+    1. `cd dataformat`
+    2. `sbt`.
+    3. `package`.
 
 This will generate jar in Dataformat folder. `Copy that jar path`. 
 
-Step 4 : Open terminal in Sprak folder.
-step 5 : goto in bin folder of spark.  `cd bin`
-step 6 : `./spark-submit <jar path>` . eg ./spark-submit dataFormat.jar
+    4. Open terminal in Sprak folder.
+    5. goto in bin folder of spark.  `cd bin`
+    6. `./spark-submit <jar path>` . eg ./spark-submit dataFormat.jar
 
-This will generate `week[3 to 9]objectoutput` output file in `/MLPorjectOutput/` folder. 
+This will generate `week[3 to 9]objectoutput` output file in `MLPorjectOutput/` folder. 
 
 ### Make the Co-Occurance Matrix for product and depots.
 Matrix folder contain scala program for making Co-Occurance Matrix. 
 Follow the following steps to run.
 
-Step 1: `cd Matrix`.
-Step 2: `sbt`.
-Step 3: `package`.
+    1. `cd Matrix`.
+    2. `sbt`.
+    3. `package`.
 
 This will generate jar in Matrix folder. `Copy that jar path` 
 
-Step 4 : Open terminal in Sprak folder.
-step 5 : `cd bin`.
-step 6 : `./spark-submit <jar path>`. eg ./spark-submit matrix.jar
-step 7: done
+    4. Open terminal in Sprak folder.
+    5. `cd bin`.
+    6. `./spark-submit <jar path>`. eg ./spark-submit matrix.jar
+    7. done
 
-Now you have Co-Occurance matrix for product in depot in MLProjectOutput folder. `Week[3 to 9]ProductMatrix` and `Week[3 to 9]DepotMatrix` file will be generated in  `/MLProjectOutput/`  folder
+Now you have Co-Occurance matrix for product in depot in MLProjectOutput folder. `Week[3 to 9]ProductMatrix` and `Week[3 to 9]DepotMatrix` file will be generated in  `MLProjectOutput/`  folder
 
 ### Calculate the popularity of products and depots
 Run `spark-submit CalPopularity.py`
