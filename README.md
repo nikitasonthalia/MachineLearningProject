@@ -49,4 +49,9 @@ Run `spark-submit CalPopularity.py`
 Now you should have `week[3-9]ProductPopularity/` and `week[3-9]DepotPopularity/` inside `MLprojectOutput/` directory.
 
 ### Build the Analytic Based Table
-Run `spark-submit ABTBuilder.py`
+Change the `TRAIN_WEEKS` parameter in the `ABTBuilder.py` to the desired weeks. 
+
+The default value is `TRAIN_WEEKS = [3,4,5,6]`. It means the program will use the demand of week6 as the target and use the user behaviors in weeks 3,4,5 as the features.
+
+After you make the change, run `spark-submit ABTBuilder.py`
+It usually takes 15-30 minutes to finish 4 weeks calculation. 
