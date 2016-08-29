@@ -1,6 +1,27 @@
 # MachineLearningProject
 Machine Learning for solving Inventory problem
-Matrix Folder contain the scala program for making Co-Occurance Matrix for product and depots.
+### Download the code
+`git clone https://github.com/nikitasonthalia/MachineLearningProject.git`
+`cd MachineLearningProject` 
+
+### Install Spark
+`wget http://d3kbcqa49mib13.cloudfront.net/spark-2.0.0-bin-hadoop2.7.tgz`
+`tar -xvf spark-2.0.0-bin-hadoop2.7.tgz -C /opt/`
+`export PATH=$PATH:/opt/spark-2.0.0-bin-hadoop2.7/bin/`
+
+### Download the data from Kaggle
+`wget https://www.kaggle.com/c/grupo-bimbo-inventory-demand/download/train.csv.zip`
+
+### Split Data
+Run `./Splitter.sh train.csv`<br>
+Now you should have __train_week3.csv__ to __train_week9.csv__. 
+
+### Collect user information for a certain week
+DataFormat folder contain the program for the formating and cleaning trainning dataset. It will format data userwise. All user data can be combine togther.
+This will help us for making Co-Occurance matrix.
+
+To run this follow the above steps.
+### Make the Co-Occurance Matrix for product and depots.
 To Run that on Sprak Follow the Following steps:
 Step 1 : Create Jar file for this program.
 Step 2 : Open terminal in Sprak evniroment.
@@ -16,8 +37,6 @@ Step 2: write sbt command.
 Step 3: write package command.
 step4 : done
 
-DataFormat folder contain the program for the formating and cleaning trainning dataset. It will format data userwise. All user data can be combine togther
-This will help us for making Co-Occurance matrix.
-
-To run this follow the above steps.
-
+### Calculate the popularity of products and depots
+Run `spark-submit CalPopularity.py`
+Now you should have 
