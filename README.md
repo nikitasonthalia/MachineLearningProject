@@ -1,16 +1,23 @@
 # MachineLearningProject
 Machine Learning for solving Inventory problem
 ### Download the code
-`git clone https://github.com/nikitasonthalia/MachineLearningProject.git`
-`cd MachineLearningProject` 
+<pre>
+git clone https://github.com/nikitasonthalia/MachineLearningProject.git
+cd MachineLearningProject
+</pre>
 
 ### Install Spark
-`wget http://d3kbcqa49mib13.cloudfront.net/spark-2.0.0-bin-hadoop2.7.tgz`
-`tar -xvf spark-2.0.0-bin-hadoop2.7.tgz -C /opt/`
-`export PATH=$PATH:/opt/spark-2.0.0-bin-hadoop2.7/bin/`
+<pre>
+wget http://d3kbcqa49mib13.cloudfront.net/spark-2.0.0-bin-hadoop2.7.tgz
+tar -xvf spark-2.0.0-bin-hadoop2.7.tgz -C /opt/
+export PATH=$PATH:/opt/spark-2.0.0-bin-hadoop2.7/bin/
+</pre>
 
 ### Download the data from Kaggle
-`wget https://www.kaggle.com/c/grupo-bimbo-inventory-demand/download/train.csv.zip`
+<pre>
+wget https://www.kaggle.com/c/grupo-bimbo-inventory-demand/download/train.csv.zip
+unzip train.csv.zip
+</pre>
 
 ### Split Data
 Run `./Splitter.sh train.csv`<br>
@@ -39,4 +46,7 @@ step4 : done
 
 ### Calculate the popularity of products and depots
 Run `spark-submit CalPopularity.py`
-Now you should have 
+Now you should have `week[3-9]ProductPopularity/` and `week[3-9]DepotPopularity/` inside `MLprojectOutput/` directory.
+
+### Build the Analytic Based Table
+Run `spark-submit ABTBuilder.py`
