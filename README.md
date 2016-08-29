@@ -53,5 +53,7 @@ Change the `TRAIN_WEEKS` parameter in the `ABTBuilder.py` to the desired weeks.
 
 The default value is `TRAIN_WEEKS = [3,4,5,6]`. It means the program will use the demand of week6 as the target and use the user behaviors in weeks 3,4,5 as the features.
 
+In this analysis, we only used `TRAIN_WEEKS = [3,4,5,6]` to generate `week345to6Formated/` inside `MLprojectOutput/` directory as training data and used `TRAIN_WEEKS = [4,5,6,7]` to generate `week456to7Formated/` inside `MLprojectOutput/` directory as testing data.
+
 After you make the change, run `spark-submit ABTBuilder.py`
 It usually takes 15-30 minutes to finish 4 weeks calculation. 
