@@ -10,7 +10,7 @@ object Cooccurrence {
      .set("spark.driver.memory","5g"));
     for( a <- 3 to 10){
        
-    val textFile = sc.textFile("/MLprojectOutput/train_week"+a+".csv")
+    val textFile = sc.textFile("MLprojectOutput/train_week"+a+".csv")
     val pro = textFile.map(line => {
     val token = line.split(",");
     val key = token(4);
