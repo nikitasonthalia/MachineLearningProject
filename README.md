@@ -20,6 +20,7 @@ git clone --recursive https://github.com/dmlc/xgboost /opt/xgboost &&\
     ./build.sh
 </pre>
 
+
 ### Install numpy, scipy, and scikit-learn
 <pre>
 sudo pip3 install numpy==1.11.0 scipy==0.17.0 sklearn
@@ -30,6 +31,22 @@ sudo pip3 install numpy==1.11.0 scipy==0.17.0 sklearn
 wget http://d3kbcqa49mib13.cloudfront.net/spark-2.0.0-bin-hadoop2.7.tgz
 tar -xvf spark-2.0.0-bin-hadoop2.7.tgz -C /opt/
 export PATH=$PATH:/opt/spark-2.0.0-bin-hadoop2.7/bin/
+</pre>
+
+
+### Intall sbt
+<pre>
+Install on Mac
+
+`ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"` 
+`brew install sbt`
+
+Install on Linux
+
+`echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list`
+`sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823`
+`sudo apt-get update`
+`sudo apt-get install sbt`
 </pre>
 
 ### Download the data from Kaggle
