@@ -40,6 +40,7 @@ unzip train.csv.zip
 
 ### Split Data
 Run `./Splitter.sh train.csv`<br>
+It probably takes half a day to finish. We did not optimize this part because we only need to run it once.
 Now you should have __train_week3.csv__ to __train_week9.csv__. 
 
 ### Collect user information for a certain week
