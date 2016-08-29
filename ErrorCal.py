@@ -10,12 +10,16 @@ with open("MLprojectOutput/week456to7Formated/part-00000", 'r') as f_handle:
 
 errors = []
 sum_ = 0
+total_ = 0
 for i, v in enumerate(data):
     if v>0:
         errors.append(abs(v-pred[i])/v)
     else:
         errors.append(1.0 if pred[i]>0 else 0)
     sum_ += errors[-1]**2
+    total_ += v-pred[i]
 errors.sort()
 print ("mean=",math.sqrt(sum_/len(pred)))
+print ("total=",total_)
 print ("50 Percentile=", errors[int(len(pred)*0.5)], ", 75 Percentile=", errors[int(len(pred)*0.75)] )
+print ("90 Percentile=", errors[int(len(pred)*0.9)], ", 99.5 Percentile=", errors[int(len(pred)*0.995)] )
