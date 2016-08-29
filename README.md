@@ -5,6 +5,7 @@ Machine Learning for solving Inventory problem
 * Memory more than 16GB
 * Disk more than 50GB
 * Operating System: Ubuntu 15.10 Wily
+* Python 3.x
 
 ### Download the code
 <pre>
@@ -12,6 +13,18 @@ git clone https://github.com/nikitasonthalia/MachineLearningProject.git
 cd MachineLearningProject
 </pre>
 
+### Install XGBOOST
+<pre>
+git clone --recursive https://github.com/dmlc/xgboost /opt/xgboost &&\
+    cd /opt/xgboost &&\
+    ./build.sh &&\
+</pre>
+
+### Install numpy, scipy, and scikit-learn
+<pre>
+sudo pip3 install numpy==1.11.0 scipy==0.17.0 sklearn
+</pre>
+    
 ### Install Spark
 <pre>
 wget http://d3kbcqa49mib13.cloudfront.net/spark-2.0.0-bin-hadoop2.7.tgz
