@@ -32,23 +32,33 @@ Now you should have __train_week3.csv__ to __train_week9.csv__.
 ### Collect user information for a certain week
 DataFormat folder contain the program for the formating and cleaning trainning dataset. It will format data userwise. All user data can be combine togther.
 This will help us for making Co-Occurance matrix.
+To Run this program on spark follow the following steps:
 
-To run this follow the above steps.
+Step 1: Open terminal in the dataFormat program folder.
+Step 2: write sbt.
+Step 3: write package.
+This will generate jar in Dataformat folder. 
+Step 4 : Open terminal in Sprak folder.
+step 5 : goto in bin folder of spark.
+step 6 : ./spark-submit dataFormat.jar
+step 7: done
+
 ### Make the Co-Occurance Matrix for product and depots.
-To Run that on Sprak Follow the Following steps:
-Step 1 : Create Jar file for this program.
-Step 2 : Open terminal in Sprak evniroment.
-step 3 : goto in bin folder of spark.
-step 4 : run script spark-submit with the jar path given as arugment.
-step 5 : done
+Matrix folder contain scala program for making Co-Occurance Matrix. 
+Follow the following steps to run.
 
-This way you can create the Co-Occurance matrix.
-
-To create the jar follow the followig steps:
 Step 1: Open terminal in the Matrix program folder.
-Step 2: write sbt command.
-Step 3: write package command.
-step4 : done
+Step 2: write sbt.
+Step 3: write package.
+This will generate jar in Matrix folder. 
+Step 4 : Open terminal in Sprak folder.
+step 5 : goto in bin folder of spark.
+step 6 : ./spark-submit matrix.jar
+step 7: done
+
+Now you have Co-Occurance matrix for week[3] of product. 
+You can make changes for product and depot matrix and generate output. 
+Changes can be done in input file only. 
 
 ### Calculate the popularity of products and depots
 Run `spark-submit CalPopularity.py`
