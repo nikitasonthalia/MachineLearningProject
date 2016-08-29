@@ -17,7 +17,7 @@ import sys, os
 from pyspark import SparkContext, SparkConf
 from ast import literal_eval
 import numpy as np
-TRAIN_WEEKS = [3,4,5,6]
+TRAIN_WEEKS = [3,4,5,6,7,8,9]
 
 def parse(x):
     res = x[1:-1].split(',CompactBuffer')
@@ -215,11 +215,12 @@ if __name__ == "__main__":
     #         count += 1
     #         if count>1000:
     #             break
-    os.system("rm -rf MLprojectOutput/week{0}Formated".format(TRAIN_WEEKS[-1]))
-    conf = SparkConf()
+    OutputFolderName = "MLprojectOutput/week{0}to{1}Formated".format(''.join([str(i) for i in TRAIN_WEEKS[:-1]]),TRAIN_WEEKS[-1])
+    os.system("rm -rf {0}".format(OutputFolderName))
+    conf = SparkConf().setMaster("local[6]")
     sc = SparkContext(conf=conf)
     logger = sc._jvm.org.apache.log4j
     logger.LogManager.getLogger("org"). setLevel( logger.Level.WARN )
     logger.LogManager.getLogger("akka").setLevel( logger.Level.WARN )
-    formated_data = sc.textFile("train_week{0}.csv".format(TRAIN_WEEKS[-1])).map(createSample)
-    formated_data.coalesce(1).saveAsTextFile("MLprojectOutput/week{0}Formated".format(TRAIN_WEEKS[-1]))
+    formated_data = sc.textFile("MLprojectOutput/train_week{0}.csv".format(TRAIN_WEEKS[-1])).map(createSample)
+    formated_data.coalesce(1).saveAsTextFile(OutputFolderName)
