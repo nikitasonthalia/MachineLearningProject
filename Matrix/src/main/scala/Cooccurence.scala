@@ -8,8 +8,7 @@ object Cooccurrence {
     .setMaster("local[7]") 
      .set("spark.executor.memory", "4g")
      .set("spark.driver.memory","5g"));
-  val valuefile =  sc.objectFile[(Char, Seq[(String)])]("/Users/vikashkamdar/Desktop/MLProject/week3output/part-00000");
-
+    val valuefile =  sc.objectFile[(Char, Seq[(String)])]("/Users/vikashkamdar/Desktop/week7Pobjectoutput/part-00000");
     val output= valuefile.persist(StorageLevel.MEMORY_AND_DISK_SER).flatMap( {
       case (userid, values) =>
       {
@@ -21,7 +20,7 @@ object Cooccurrence {
           })
     }}).reduceByKey(_ + _);
 
-  output.coalesce(1).saveAsTextFile("/Users/vikashkamdar/Desktop/MLProject/week3matrix")
+  output.coalesce(1).saveAsTextFile("/Users/vikashkamdar/Desktop/MLprojectOutput/week7ProductMatrix")
  
 }
   }

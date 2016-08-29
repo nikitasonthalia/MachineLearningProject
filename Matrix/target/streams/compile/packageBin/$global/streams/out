@@ -1,15 +1,17 @@
-[0m[[0minfo[0m] [0mPackaging /Users/vikashkamdar/Desktop/MLProject/Matrix/target/scala-2.10/spark-linecount_2.10-1.0.jar ...[0m
+[0m[[0minfo[0m] [0mPackaging /Users/vikashkamdar/Desktop/code_MLProject/Matrix/target/scala-2.10/spark-linecount_2.10-1.0.jar ...[0m
 [0m[[0mdebug[0m] [0mInput file mappings:[0m
-[0m[[0mdebug[0m] [0m	Cooccurrence$.class[0m
-[0m[[0mdebug[0m] [0m	  /Users/vikashkamdar/Desktop/MLProject/Matrix/target/scala-2.10/classes/Cooccurrence$.class[0m
-[0m[[0mdebug[0m] [0m	Cooccurrence$$anonfun$2$$anonfun$apply$1.class[0m
-[0m[[0mdebug[0m] [0m	  /Users/vikashkamdar/Desktop/MLProject/Matrix/target/scala-2.10/classes/Cooccurrence$$anonfun$2$$anonfun$apply$1.class[0m
-[0m[[0mdebug[0m] [0m	Cooccurrence$$anonfun$2.class[0m
-[0m[[0mdebug[0m] [0m	  /Users/vikashkamdar/Desktop/MLProject/Matrix/target/scala-2.10/classes/Cooccurrence$$anonfun$2.class[0m
-[0m[[0mdebug[0m] [0m	Cooccurrence.class[0m
-[0m[[0mdebug[0m] [0m	  /Users/vikashkamdar/Desktop/MLProject/Matrix/target/scala-2.10/classes/Cooccurrence.class[0m
-[0m[[0mdebug[0m] [0m	Cooccurrence$$anonfun$2$$anonfun$3.class[0m
-[0m[[0mdebug[0m] [0m	  /Users/vikashkamdar/Desktop/MLProject/Matrix/target/scala-2.10/classes/Cooccurrence$$anonfun$2$$anonfun$3.class[0m
 [0m[[0mdebug[0m] [0m	Cooccurrence$$anonfun$1.class[0m
-[0m[[0mdebug[0m] [0m	  /Users/vikashkamdar/Desktop/MLProject/Matrix/target/scala-2.10/classes/Cooccurrence$$anonfun$1.class[0m
+[0m[[0mdebug[0m] [0m	  /Users/vikashkamdar/Desktop/code_MLProject/Matrix/target/scala-2.10/classes/Cooccurrence$$anonfun$1.class[0m
+[0m[[0mdebug[0m] [0m	Cooccurrence$$anonfun$2.class[0m
+[0m[[0mdebug[0m] [0m	  /Users/vikashkamdar/Desktop/code_MLProject/Matrix/target/scala-2.10/classes/Cooccurrence$$anonfun$2.class[0m
+[0m[[0mdebug[0m] [0m	Cooccurrence$$anonfun$2$$anonfun$3.class[0m
+[0m[[0mdebug[0m] [0m	  /Users/vikashkamdar/Desktop/code_MLProject/Matrix/target/scala-2.10/classes/Cooccurrence$$anonfun$2$$anonfun$3.class[0m
+[0m[[0mdebug[0m] [0m	Cooccurrence$$anonfun$2$$anonfun$4.class[0m
+[0m[[0mdebug[0m] [0m	  /Users/vikashkamdar/Desktop/code_MLProject/Matrix/target/scala-2.10/classes/Cooccurrence$$anonfun$2$$anonfun$4.class[0m
+[0m[[0mdebug[0m] [0m	Cooccurrence$$anonfun$2$$anonfun$apply$1.class[0m
+[0m[[0mdebug[0m] [0m	  /Users/vikashkamdar/Desktop/code_MLProject/Matrix/target/scala-2.10/classes/Cooccurrence$$anonfun$2$$anonfun$apply$1.class[0m
+[0m[[0mdebug[0m] [0m	Cooccurrence$.class[0m
+[0m[[0mdebug[0m] [0m	  /Users/vikashkamdar/Desktop/code_MLProject/Matrix/target/scala-2.10/classes/Cooccurrence$.class[0m
+[0m[[0mdebug[0m] [0m	Cooccurrence.class[0m
+[0m[[0mdebug[0m] [0m	  /Users/vikashkamdar/Desktop/code_MLProject/Matrix/target/scala-2.10/classes/Cooccurrence.class[0m
 [0m[[0minfo[0m] [0mDone packaging.[0m
