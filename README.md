@@ -41,6 +41,7 @@ unzip train.csv.zip
 ### Split Data
 Run `./Splitter.sh train.csv`<br>
 It probably takes half a day to finish. We did not optimize this part because we only need to run it once.
+
 Now you should have __train_week3.csv__ to __train_week9.csv__. 
 
 ### Collect user information for a certain week
@@ -87,3 +88,15 @@ In this analysis, we only used `TRAIN_WEEKS = [3,4,5,6]` to generate `week345to6
 
 After you make the change, run `spark-submit ABTBuilder.py`
 It usually takes 15-30 minutes to finish 4 weeks calculation. 
+
+### Build the predictive model, make the predictions and calculate R^2
+Choose your train and test data in `PredictModel.py`. The default ones are
+<pre>
+TRAIN_DATA = "MLprojectOutput/week345to6Formated/part-00000"
+TEST_DATA = "MLprojectOutput/week456to7Formated/part-00000"
+</pre>
+
+Run `python3.4 PredictModel.py`
+
+The results of predictions will be saved `predict.csv`. It is a single row csv file.
+The "R^2" and "Mean Squared Error" will be output to stdout.
