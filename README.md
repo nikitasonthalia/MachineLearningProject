@@ -42,7 +42,7 @@ unzip train.csv.zip
 Run `./Splitter.sh train.csv`<br>
 It probably takes half a day to finish. We did not optimize this part because we only need to run it once.
 
-Now you should have __train_week3.csv__ to __train_week9.csv__. 
+Now you should have `train_week[3-9].csv`. 
 
 ### Collect user information for a certain week
 DataFormat folder contain the program for the formating and cleaning trainning dataset. It will format data userwise. All user data can be combine togther.
