@@ -1,5 +1,11 @@
 # MachineLearningProject
 Machine Learning for solving Inventory problem
+### System Requirement
+CPU more than 6 cores
+Memory more than 16GB
+Disk more than 50GB
+Operating System: Ubuntu 15.10 Wily
+
 ### Download the code
 <pre>
 git clone https://github.com/nikitasonthalia/MachineLearningProject.git
