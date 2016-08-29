@@ -17,7 +17,7 @@ cd MachineLearningProject
 <pre>
 git clone --recursive https://github.com/dmlc/xgboost /opt/xgboost &&\
     cd /opt/xgboost &&\
-    ./build.sh &&\
+    ./build.sh
 </pre>
 
 ### Install numpy, scipy, and scikit-learn
