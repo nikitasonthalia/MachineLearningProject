@@ -72,11 +72,11 @@ To Run this program on spark follow the following steps:
     cd dataformat
     sbt package
 </pre>
-This will generate jar in Dataformat folder. `Copy that jar path`. 
+This will generate jar in Dataformat folder. 
 
     4. Open terminal in Sprak folder.
     5. goto in bin folder of spark.  `cd bin`
-    6. `./spark-submit <jar path>` . eg ./spark-submit dataFormat.jar
+    6. `./spark-submit /dataFormat/target/scala-2.10/spark-linecount_2.10-1.0.jar`
 
 This will generate `week[3 to 9]objectoutput` output file in `MLPorjectOutput/` folder. 
 
@@ -92,7 +92,7 @@ This will generate jar in Matrix folder.
 
     4. Open terminal in Sprak folder.
     5. `cd bin`.
-    6. `./spark-submit /Matrix/target/scala-2.10/
+    6. `./spark-submit /Matrix/target/scala-2.10/spark-linecount_2.10-1.0.jar`
     7. done
 
 Now you have Co-Occurance matrix for product in depot in MLProjectOutput folder. `Week[3 to 9]ProductMatrix` and `Week[3 to 9]DepotMatrix` file will be generated in  `MLProjectOutput/`  folder
