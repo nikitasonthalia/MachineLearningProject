@@ -18,6 +18,7 @@ cd MachineLearningProject
 git clone --recursive https://github.com/dmlc/xgboost /opt/xgboost &&\
     cd /opt/xgboost &&\
     ./build.sh
+export PYTHONPATH=/opt/xgboost/python-package:$PYTHONPATH
 </pre>
 
 
