@@ -15,9 +15,9 @@ cd MachineLearningProject
 
 ### Install XGBOOST
 <pre>
-git clone --recursive https://github.com/dmlc/xgboost /opt/xgboost &&\
-    cd /opt/xgboost &&\
-    ./build.sh
+sudo git clone --recursive https://github.com/dmlc/xgboost /opt/xgboost &&\
+sudo cd /opt/xgboost &&\
+sudo ./build.sh
 export PYTHONPATH=/opt/xgboost/python-package:$PYTHONPATH
 </pre>
 
