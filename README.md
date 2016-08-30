@@ -88,11 +88,11 @@ Follow the following steps to run.
     2. `sbt`.
     3. `package`.
 
-This will generate jar in Matrix folder. `Copy that jar path` 
+This will generate jar in Matrix folder. 
 
     4. Open terminal in Sprak folder.
     5. `cd bin`.
-    6. `./spark-submit <jar path>`. eg ./spark-submit matrix.jar
+    6. `./spark-submit /Matrix/target/scala-2.10/
     7. done
 
 Now you have Co-Occurance matrix for product in depot in MLProjectOutput folder. `Week[3 to 9]ProductMatrix` and `Week[3 to 9]DepotMatrix` file will be generated in  `MLProjectOutput/`  folder
