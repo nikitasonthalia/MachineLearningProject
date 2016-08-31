@@ -102,9 +102,8 @@ After you make the change, run `spark-submit ABTBuilder.py`
 It usually takes 15-30 minutes to finish 4 weeks calculation. 
 
 ### Build the predictive model and validate
-Choose your training data and training type in `CreateModel.py`. The default ones are
+Choose the training data in `CreateModel.py`. The default ones are
 <pre>
-CreateWeek = "NextNextWeek"
 DATA = "MLprojectOutput/week34567to8Formated/part-00000" for "NextWeek"
 DATA = "MLprojectOutput/week34567to9Formated/part-00000" for "NextNextWeek"
 </pre>
@@ -116,15 +115,9 @@ One can easily split the training and validation samples by specifying the row n
 
 Run `python3.4 CreateModel.py`
 
-Now you should have `Predict_NextNextWeek_Scaler.pkl` for normalizing the data and `PredictNextNextWeek.model` as the model.
-
-Change the `CreateWeek` to "NextWeek" and run `python3.4 CreateModel.py` again. Adjust parameters if necessary.
-
-Now you should have `Predict_NextWeek_Scaler.pkl` for normalizing the data and `PredictNextWeek.model` as the model. This allows that NextWeek model can have different training parameters with NextNextWeek model. 
+Now you should have `Predict_NextNextWeek_Scaler.pkl` and `Predict_NextWeek_Scaler.pkl` for normalizing the data and `PredictNextNextWeek.model` and `PredictNextWeek.model` as the models.
 
 The validation test parameters are also displayed in this step so that you can always adjust your model based on it.
-
-Another script `Validate.py` is to load the trained model and make the test. It is just `CreateModel.py` without training part.
 
 ***The following instructions are only useful for real Kaggle submission***
 ### From Kaggle `test.csv` to `submission.csv`
