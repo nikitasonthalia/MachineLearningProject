@@ -9,26 +9,23 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler,MinMaxScaler
 from sklearn.metrics import *
 from sklearn.externals import joblib
-CreateWeek = "NextNextWeek"
-if CreateWeek != "NextWeek" and CreateWeek != "NextNextWeek":
-    raise ValueError(CreateWeek)
 
-def readData(filename, nrow=100):
-    irow = 0
+def readData(filename, start_row=0, end_row=-1):
+    irow = -1
     data = []
     with open(filename, 'r') as f_handle:
         for row in f_handle:
-            data.append([np.float64(x) for x in row[1:-2].split(',')])
             irow += 1
+            if irow<start_row:
+                continue
+            elif irow>end_row and end_row>0:
+                break
+            data.append([np.float64(x) for x in row[1:-2].split(',')])
             if irow%1000==0:
                 sys.stdout.write("\rRead {0} lines from {1}".format(irow, filename))
                 sys.stdout.flush()
-            if irow>=nrow and nrow>0:
-                break
     data = np.array(data)
-    X = data[:,:-1]
-    Y = data[:,-1]
-    return (X,Y)
+    return (data[:,:-1],data[:,-1])
 
 def evaluate(data, pred):
     print("R2=", r2_score(data,pred))
@@ -49,23 +46,33 @@ def evaluate(data, pred):
     print ("50 Percentile=", errors[int(len(pred)*0.5)], ", 75 Percentile=", errors[int(len(pred)*0.75)] )
     print ("90 Percentile=", errors[int(len(pred)*0.9)], ", 99.5 Percentile=", errors[int(len(pred)*0.995)] )
 
-if __name__ == '__main__':
-    if CreateWeek == "NextWeek":
+def train(mode):
+    if mode == "NextWeek":
         DATA = "MLprojectOutput/week34567to8Formated/part-00000"
     else:
         DATA = "MLprojectOutput/week34567to9Formated/part-00000"
-    X, Y = readData(DATA, -1)
-    n_data = len(X)
-    X_TEST = X[n_data/20:,:]
-    Y_TEST = Y[n_data/20:]
+    X, Y = readData(DATA, 0, -1)
     X_Scaler = MinMaxScaler().fit(X)
-    joblib.dump(X_Scaler, 'Predict{0}_Scaler.pkl'.format(CreateWeek))
+    joblib.dump(X_Scaler, 'Predict{0}_Scaler.pkl'.format(mode))
     X = X_Scaler.transform(X)
     dtrain = xgb.DMatrix(X, label = Y)
-    param = {'max_depth':6, 'eta':0.3, 'silent':0, 'objective':'reg:linear', 'nthread':10, 'eval_metric':'rmse'}
+    param = { 'booster':"gbtree",
+              'eta':0.3,
+              'max_depth':6,
+              'subsample':0.85,
+              'colsample_bytree':0.7,
+              'silent':0,
+              'objective':'reg:linear',
+              'nthread':10,
+              'eval_metric':'rmse'}
     __model = xgb.train(param.items(), dtrain)
-    __model.save_model('Predict{0}.model'.format(CreateWeek))
+    __model.save_model('Predict{0}.model'.format(mode))
+    X_TEST, Y_TEST = readData(DATA, 0, 10000)
     X_TEST = X_Scaler.transform(X_TEST)
     dtest = xgb.DMatrix(X_TEST)
     Y_pred = list(map(lambda x: int(x), __model.predict(dtest)))
     evaluate(Y_TEST,Y_pred)
+
+if __name__ == '__main__':
+    train('NextWeek')
+    train('NextNextWeek')
