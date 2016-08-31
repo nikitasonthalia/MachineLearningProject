@@ -1,4 +1,4 @@
-name := "Spark LineCount"
+name := "dataformat"
 
 version := "1.0"
 

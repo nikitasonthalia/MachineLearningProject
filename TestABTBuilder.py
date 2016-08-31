@@ -4,20 +4,12 @@
 #   Aug, 2016                        #
 ######################################
 
-# Plot colors
-# b: blue
-# g: green
-# r: red
-# c: cyan
-# m: magenta
-# y: yellow
-# k: black
-# w: white
 import sys, os
 from pyspark import SparkContext, SparkConf
 from ast import literal_eval
 import numpy as np
-TRAIN_WEEKS = [3,4,5,6,7,9]
+WEEKS = [5,6,7,8,9,10]
+#WEEKS = [5,6,7,8,9,11]
 
 def parse(x):
     res = x[1:-1].split(',CompactBuffer')
@@ -94,17 +86,6 @@ def load_occurrence_matrix(filename, item_dict={}):
         sys.stdout.write("\n")
     return item_dict
 
-# def sort_by_weight(prod_occurrence):
-#     ordered_occurrence = {}
-#     for userID, entry in prod_occurrence.items():
-#         weights = list(entry.values())
-#         # sum_weights = sum(weights)
-#         # weights = [weight*100/sum_weights for weight in weights ]
-#         occurrences = list(zip(list(entry.keys()),weights))
-#         occurrences.sort(key=lambda x:x[1], reverse=True)
-#         ordered_occurrence[userID] = occurrences
-#     return ordered_occurrence
-
 def load_popularity(filename, item_pop={}):
     with open(filename, 'r') as f:
         for line in f:
@@ -117,14 +98,14 @@ def load_popularity(filename, item_pop={}):
     sys.stdout.write("Read popularity from {0}, done.\n".format(filename))
     return item_pop
 
-N_HISTORY_WEEKS = len(TRAIN_WEEKS)-1
+N_HISTORY_WEEKS = len(WEEKS)-1
 weeks_prod = [{}]*N_HISTORY_WEEKS
 weeks_depot = [{}]*N_HISTORY_WEEKS
 prod_occurrence = {}
 depot_occurrence = {}
 product_popularity = {}
 depot_popularity = {}
-for i, week in enumerate(TRAIN_WEEKS[:-1]):
+for i, week in enumerate(WEEKS[:-1]):
     # weeks_prod[i], weeks_depot[i] = load_customer("test")
     weeks_prod[i], weeks_depot[i] = load_customer("MLprojectOutput/week{0}objectoutput/part-00000".format(week))
     prod_occurrence = load_occurrence_matrix("MLprojectOutput/week{0}ProductMatrix/part-00000".format(week), prod_occurrence)
@@ -137,19 +118,10 @@ MAX_RELATIVE_PRODUCTS = 3
 MAX_RELATIVE_DEPOTS = 1
 def createSample(line):
     token = line.split(",")
-    userID = int(token[4])
-    product = int(token[5])
-    depot = int(token[1])
-    try:
-        demand = int(token[-1])
-    except ValueError:
-        sys.stdout.write("-{0}-\n".format(token[-1]))
-        try:
-            demand = int(token[-1][:-1])
-        except ValueError:
-            sys.stdout.write("..........................")
-            demand = 0
-    row = []
+    userID = int(token[5])
+    product = int(token[6])
+    depot = int(token[2])
+    row = [int(token[0])]
     for i in range(N_HISTORY_WEEKS):
         n_prod = 0
         n_rel_prod = []
@@ -204,23 +176,16 @@ def createSample(line):
         depot_pop = depot_popularity[depot]
     else:
         depot_pop = 0
-    row.extend([prod_pop,depot_pop,demand])
+    row.extend([prod_pop,depot_pop])
     return row
 
 if __name__ == "__main__":
-    # count=0
-    # with open("train_week{0}.csv".format(TRAIN_WEEKS[-1]), 'r') as f:
-    #     for line in f:
-    #         print(createSample(line))
-    #         count += 1
-    #         if count>1000:
-    #             break
-    OutputFolderName = "MLprojectOutput/week{0}to{1}Formated".format(''.join([str(i) for i in TRAIN_WEEKS[:-1]]),TRAIN_WEEKS[-1])
+    OutputFolderName = "MLprojectOutput/week{0}to{1}Formated".format(''.join([str(i) for i in WEEKS[:-1]]),WEEKS[-1])
     os.system("rm -rf {0}".format(OutputFolderName))
     conf = SparkConf().setMaster("local[24]")
     sc = SparkContext(conf=conf)
     logger = sc._jvm.org.apache.log4j
     logger.LogManager.getLogger("org"). setLevel( logger.Level.WARN )
     logger.LogManager.getLogger("akka").setLevel( logger.Level.WARN )
-    formated_data = sc.textFile("MLprojectOutput/train_week{0}.csv".format(TRAIN_WEEKS[-1])).map(createSample)
+    formated_data = sc.textFile("MLprojectOutput/test_week{0}.csv".format(WEEKS[-1])).map(createSample)
     formated_data.coalesce(1).saveAsTextFile(OutputFolderName)

@@ -1,1 +1,9 @@
-[0m[[0mdebug[0m] [0mJar uptodate: /Users/vikashkamdar/Desktop/MLProject/MLProject/target/scala-2.10/spark-linecount_2.10-1.0.jar[0m
+[0m[[0minfo[0m] [0mPackaging /home/zhang/Kaggle-Bimbo/MachineLearningProject/dataFormat/target/scala-2.10/dataformat_2.10-1.0.jar ...[0m
+[0m[[0mdebug[0m] [0mInput file mappings:[0m
+[0m[[0mdebug[0m] [0m	DataFormat$$anonfun$main$1.class[0m
+[0m[[0mdebug[0m] [0m	  /home/zhang/Kaggle-Bimbo/MachineLearningProject/dataFormat/target/scala-2.10/classes/DataFormat$$anonfun$main$1.class[0m
+[0m[[0mdebug[0m] [0m	DataFormat$.class[0m
+[0m[[0mdebug[0m] [0m	  /home/zhang/Kaggle-Bimbo/MachineLearningProject/dataFormat/target/scala-2.10/classes/DataFormat$.class[0m
+[0m[[0mdebug[0m] [0m	DataFormat.class[0m
+[0m[[0mdebug[0m] [0m	  /home/zhang/Kaggle-Bimbo/MachineLearningProject/dataFormat/target/scala-2.10/classes/DataFormat.class[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
