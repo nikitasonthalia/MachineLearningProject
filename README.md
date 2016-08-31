@@ -128,7 +128,7 @@ Another script `Validate.py` is to load the trained model and make the test. It 
 
 ***The following instructions are only useful for real Kaggle submission***
 ### From Kaggle `test.csv` to `submission.csv`
-    1. Run `./Splitter_Test.sh` to split the test data weekly. You should have `test_week10.csv` and `test_week11.csv`. This procedure takes several hours and only need to run once.
-    2. Run `python3 TestABTBuilder.py` to build the ABT based on `test_week10.csv` and `test_week11.csv` queries. This script will retain the ID in test.csv. It takes serveral hours.
-    3. Run `python3 Predict.py` to load the Scaler pkl files and the `PredictNextWeek.model` and `PredictNextNextWeek.model` and generate the `submission.csv`
-    4. Submit the `submission.csv` to Kaggle and see the score
+   1. Run `./Splitter_Test.sh` to split the test data weekly. You should have `test_week10.csv` and `test_week11.csv`. This procedure takes several hours and only need to run once.
+   2. Run `python3 TestABTBuilder.py` to build the ABT based on `test_week10.csv` and `test_week11.csv` queries. This script will retain the ID in test.csv. It takes serveral hours.
+   3. Run `python3 Predict.py` to load the Scaler pkl files and the `PredictNextWeek.model` and `PredictNextNextWeek.model` and generate the `submission.csv`
+   4. Submit the `submission.csv` to Kaggle and see the score
