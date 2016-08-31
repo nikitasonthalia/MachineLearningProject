@@ -71,29 +71,19 @@ To Run this program on spark follow the following steps:
 <pre>
     cd dataformat
     sbt package
+    spark-submit ~/dataFormat/target/scala-2.10/spark-linecount_2.10-1.0.jar
 </pre>
-This will generate jar in Dataformat folder. 
-
-    4. Open terminal in Sprak folder.
-    5. goto in bin folder of spark.  `cd bin`
-    6. `./spark-submit ~/dataFormat/target/scala-2.10/spark-linecount_2.10-1.0.jar`
-
 This will generate `week[3 to 9]objectoutput` output file in `MLPorjectOutput/` folder. 
 
 ### Make the Co-Occurance Matrix for product and depots.
 Matrix folder contain scala program for making Co-Occurance Matrix. 
 Follow the following steps to run.
 
-    1. `cd Matrix`.
-    2. `sbt`.
-    3. `package`.
-
-This will generate jar in Matrix folder. 
-
-    4. Open terminal in Sprak folder.
-    5. `cd bin`.
-    6. `./spark-submit ~/Matrix/target/scala-2.10/spark-linecount_2.10-1.0.jar`
-    7. done
+<pre>
+    cd Matrix
+    sbt package
+    spark-submit ~/dataFormat/target/scala-2.10/spark-linecount_2.10-1.0.jar
+</pre>
 
 Now you have Co-Occurance matrix for product in depot in MLProjectOutput folder. `Week[3 to 9]ProductMatrix` and `Week[3 to 9]DepotMatrix` file will be generated in  `MLProjectOutput/`  folder
 
@@ -104,21 +94,31 @@ Now you should have `week[3-9]ProductPopularity/` and `week[3-9]DepotPopularity/
 ### Build the Analytic Based Table
 Change the `TRAIN_WEEKS` parameter in the `ABTBuilder.py` to the desired weeks. 
 
-The default value is `TRAIN_WEEKS = [3,4,5,6]`. It means the program will use the demand of week6 as the target and use the user behaviors in weeks 3,4,5 as the features.
+The default value is `TRAIN_WEEKS = [3,4,5,6,7,8]`. It means the program will use the demand of week8 as the target and use the user behaviors in weeks 3,4,5,6,7 as the features.
 
-In this analysis, we only used `TRAIN_WEEKS = [3,4,5,6]` to generate `week345to6Formated/` inside `MLprojectOutput/` directory as training data and used `TRAIN_WEEKS = [4,5,6,7]` to generate `week456to7Formated/` inside `MLprojectOutput/` directory as testing data.
+In this analysis, we only used `TRAIN_WEEKS = [3,4,5,6,7,8]` to generate `week34567to8Formated/` inside `MLprojectOutput/` directory to predict the next week and used `TRAIN_WEEKS = [3,4,5,6,7,9]` to generate `week34567to9Formated/` inside `MLprojectOutput/` directory to make the model to predict the next next week.
 
 After you make the change, run `spark-submit ABTBuilder.py`
 It usually takes 15-30 minutes to finish 4 weeks calculation. 
 
 ### Build the predictive model, make the predictions and calculate R^2
-Choose your train and test data in `PredictModel.py`. The default ones are
+Choose your training data and training type in `CreateModel.py`. The default ones are
 <pre>
-TRAIN_DATA = "MLprojectOutput/week345to6Formated/part-00000"
-TEST_DATA = "MLprojectOutput/week456to7Formated/part-00000"
+CreateWeek = "NextNextWeek"
+DATA = "MLprojectOutput/week34567to8Formated/part-00000" for "NextWeek"
+DATA = "MLprojectOutput/week34567to9Formated/part-00000" for "NextNextWeek"
 </pre>
+In the code, the lines
+<pre>
+    X = X[:n_data/20]
+    Y = Y[:n_data/20]
+    X_TEST = X[n_data/20:,:]
+    Y_TEST = Y[n_data/20:]
+</pre>
+split the training and testing samples.
 
-Run `python3.4 PredictModel.py`
+Run `python3.4 CreateModel.py`
+Now you should have `Predict_NextNextWeek_Scaler.pkl` for normalizing the data and `PredictNextNextWeek.model` as the model.
+The validation test parameters are also displayed.
 
-The results of predictions will be saved `predict.csv`. It is a single row csv file.
-The "R^2" and "Mean Squared Error" will be output to stdout.
+### Make the Perdiction
