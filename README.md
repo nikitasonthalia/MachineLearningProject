@@ -2,7 +2,7 @@
 Machine Learning for solving Inventory problem
 ### System Requirement
 * CPU more than 6 cores
-* Memory more than 16GB
+* Memory more than 16GB, prefer 32GB
 * Disk more than 50GB
 * Operating System: Ubuntu 15.10 Wily
 * Python 3.x
@@ -101,24 +101,34 @@ In this analysis, we only used `TRAIN_WEEKS = [3,4,5,6,7,8]` to generate `week34
 After you make the change, run `spark-submit ABTBuilder.py`
 It usually takes 15-30 minutes to finish 4 weeks calculation. 
 
-### Build the predictive model, make the predictions and calculate R^2
+### Build the predictive model and validate
 Choose your training data and training type in `CreateModel.py`. The default ones are
 <pre>
 CreateWeek = "NextNextWeek"
 DATA = "MLprojectOutput/week34567to8Formated/part-00000" for "NextWeek"
 DATA = "MLprojectOutput/week34567to9Formated/part-00000" for "NextNextWeek"
 </pre>
-In the code, the lines
+In the code, using the API 
 <pre>
-    X = X[:n_data/20]
-    Y = Y[:n_data/20]
-    X_TEST = X[n_data/20:,:]
-    Y_TEST = Y[n_data/20:]
+    readData(filename, start_row, end_row)
 </pre>
-split the training and testing samples.
+One can easily split the training and validation samples by specifying the row number.
 
 Run `python3.4 CreateModel.py`
-Now you should have `Predict_NextNextWeek_Scaler.pkl` for normalizing the data and `PredictNextNextWeek.model` as the model.
-The validation test parameters are also displayed.
 
-### Make the Perdiction
+Now you should have `Predict_NextNextWeek_Scaler.pkl` for normalizing the data and `PredictNextNextWeek.model` as the model.
+
+Change the `CreateWeek` to "NextWeek" and run `python3.4 CreateModel.py` again. Adjust parameters if necessary.
+
+Now you should have `Predict_NextWeek_Scaler.pkl` for normalizing the data and `PredictNextWeek.model` as the model. This allows that NextWeek model can have different training parameters with NextNextWeek model. 
+
+The validation test parameters are also displayed in this step so that you can always adjust your model based on it.
+
+Another script `Validate.py` is to load the trained model and make the test. It is just `CreateModel.py` without training part.
+
+***The following instructions are only useful for real Kaggle submission***
+### From Kaggle `test.csv` to `submission.csv`
+    1. Run `./Splitter_Test.sh` to split the test data weekly. You should have `test_week10.csv` and `test_week11.csv`. This procedure takes several hours and only need to run once.
+    2. Run `python3 TestABTBuilder.py` to build the ABT based on `test_week10.csv` and `test_week11.csv` queries. This script will retain the ID in test.csv. It takes serveral hours.
+    3. Run `python3 Predict.py` to load the Scaler pkl files and the `PredictNextWeek.model` and `PredictNextNextWeek.model` and generate the `submission.csv`
+    4. Submit the `submission.csv` to Kaggle and see the score
