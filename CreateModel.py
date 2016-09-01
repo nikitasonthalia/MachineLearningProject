@@ -51,7 +51,7 @@ def train(mode):
         DATA = "MLprojectOutput/week34567to8Formated/part-00000"
     else:
         DATA = "MLprojectOutput/week34567to9Formated/part-00000"
-    X, Y = readData(DATA, 0, -1)
+    X, Y = readData(DATA, 10000, -1)
     X_Scaler = MinMaxScaler().fit(X)
     joblib.dump(X_Scaler, 'Predict{0}_Scaler.pkl'.format(mode))
     X = X_Scaler.transform(X)
