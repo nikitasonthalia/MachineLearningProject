@@ -115,13 +115,15 @@ One can easily split the training and validation samples by specifying the row n
 
 Run `python3.4 CreateModel.py`
 
-Now you should have `Predict_NextNextWeek_Scaler.pkl` and `Predict_NextWeek_Scaler.pkl` for normalizing the data and `PredictNextNextWeek.model` and `PredictNextWeek.model` as the models.
+After 3-4 hours (PCs with 32GB memory will be much faster), you should have `Predict_NextNextWeek_Scaler.pkl` and `Predict_NextWeek_Scaler.pkl` for normalizing the data and `PredictNextNextWeek.model` and `PredictNextWeek.model` as the models.
 
 The validation test parameters are also displayed in this step so that you can always adjust your model based on it.
 
+The trained model files can be downloaded at https://drive.google.com/file/d/0B4kWeCJ9AdMmVFVOUDQxaUk5NVk/view?usp=sharing.
+
 ***The following instructions are only useful for real Kaggle submission***
-### From Kaggle `test.csv` to `submission.csv`
    1. Run `./Splitter_Test.sh` to split the test data weekly. You should have `test_week10.csv` and `test_week11.csv`. This procedure takes several hours and only need to run once.
-   2. Run `python3 TestABTBuilder.py` to build the ABT based on `test_week10.csv` and `test_week11.csv` queries. This script will retain the ID in test.csv. It takes serveral hours.
-   3. Run `python3 Predict.py` to load the Scaler pkl files and the `PredictNextWeek.model` and `PredictNextNextWeek.model` and generate the `submission.csv`
-   4. Submit the `submission.csv` to Kaggle and see the score
+   2. Run `spark-submit TestABTBuilder.py` to build the ABT based on `test_week10.csv` and `test_week11.csv` queries. This script will retain the ID in test.csv. It takes serveral hours.
+   3. The output of step 2 as well as the training data `week34567to8Formated/part-00000` and `week34567to9Formated/part-00000` can be downloaded at https://drive.google.com/file/d/0B4kWeCJ9AdMmdkhSTEtNZzlLbEE/view?usp=sharing. The trained model files can be downloaded at https://drive.google.com/file/d/0B4kWeCJ9AdMmVFVOUDQxaUk5NVk/view?usp=sharing.
+   4. Run `python3 Predict.py` to load the Scaler pkl files and the `PredictNextWeek.model` and `PredictNextNextWeek.model` and generate the `submission.csv`
+   5. Submit the `submission.csv` to Kaggle and see the score
